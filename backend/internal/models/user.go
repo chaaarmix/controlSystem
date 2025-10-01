@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"time"
+
+)
 
 type Role string
 
@@ -19,5 +22,5 @@ type User struct {
 	FullName string `gorm:"not null" json:"full_name"`
 	Email    string `gorm:"uniqueIndex;not null" json:"email"`
 	Password string `gorm:"not null" json:"-"` // hashed
-	Role     Role   `gorm:"type:varchar(20);not null" json:"role"`
+	Role     Role      `gorm:"type:varchar(20);not null" json:"role"`
 }

@@ -1,0 +1,30 @@
+.header {
+    background: #fff;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* центрируем по горизонтали все внутренние элементы */
+    position: relative; /* чтобы кнопка справа позиционировалась абсолютно */
+    box-shadow: 0 2px 8px #f0f1f2;
+}
+
+.centerContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 40px;
+}
+
+.title {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* кнопка выхода справа */
+.logoutButton {
+    position: absolute;
+    right: 24px;
+}

@@ -1,0 +1,12 @@
+.sider {
+    background: #001529;
+}
+
+.menu {
+    height: 100%;
+    border-right: 0;
+}
+
+.menu .ant-menu-item-selected {
+    background-color: #1890ff !important;
+}

@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Col, Typography, Card, message } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
 
 const { Title, Text } = Typography;
 
-export const Login: React.FC = () => {
-    const [loading, setLoading] = useState(false);
+interface LoginFormValues {
+    email: string;
+    password: string;
+}
 
-    const onFinish = async (values: any) => {
+const Login: React.FC = () => {
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const onFinish = async (values: LoginFormValues) => {
         setLoading(true);
         try {
             const res = await api.post("/login", {
@@ -16,10 +22,14 @@ export const Login: React.FC = () => {
                 password: values.password,
             });
 
+            // Сохраняем токен
             localStorage.setItem("token", res.data.token);
 
+            // Сохраняем роль пользователя, которая приходит с сервера
+            localStorage.setItem("role", res.data.user.role);
+
             message.success("Вы успешно вошли!");
-            window.location.href = "/";
+            navigate("/"); // редирект на домашнюю страницу через useNavigate
         } catch (err: any) {
             const text = err?.response?.data?.error || "Ошибка входа";
             message.error(text);
@@ -31,14 +41,21 @@ export const Login: React.FC = () => {
     return (
         <Row style={{ minHeight: "100vh" }} align="middle" justify="center">
             <Col xs={22} sm={16} md={12} lg={8}>
-                <Card bordered={false} style={{ borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                <Card
+                    bordered={false}
+                    style={{ borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+                >
                     <div style={{ textAlign: "center", marginBottom: 24 }}>
-                        <img src="/images/logo.png" alt="logo" style={{ height: 60, marginBottom: 12 }} />
+                        <img
+                            src="/images/logo.png"
+                            alt="logo"
+                            style={{ height: 60, marginBottom: 12 }}
+                        />
                         <Title level={3}>Вход</Title>
                         <Text type="secondary">Введите почту и пароль</Text>
                     </div>
 
-                    <Form layout="vertical" onFinish={onFinish}>
+                    <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
                         <Form.Item
                             name="email"
                             label="Email"
@@ -67,7 +84,6 @@ export const Login: React.FC = () => {
                     </Form>
                 </Card>
             </Col>
-
         </Row>
     );
 };
