@@ -1,0 +1,42 @@
+.layout {
+    min-height: 100vh;
+}
+
+.sider {
+    background: #001529;
+}
+
+.menu {
+    height: 100%;
+    border-right: 0;
+}
+
+.menuItemSelected {
+    background-color: #1890ff !important;
+}
+
+.header {
+    background: #fff;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 8px #f0f1f2;
+}
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.contentWrapper {
+    margin: 24px 16px 0;
+    overflow: initial;
+}
+
+.content {
+    padding: 24px;
+    background: #fff;
+    min-height: 360px;
+    text-align: center;
+}
