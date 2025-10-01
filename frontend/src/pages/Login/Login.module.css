@@ -1,0 +1,43 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+}
+
+.login-row {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.form-col {
+    padding: 40px;
+}
+
+.brand {
+    margin-bottom: 24px;
+}
+
+.logo {
+    height: 48px;
+    margin-bottom: 8px;
+}
+
+.login-form {
+    background: transparent;
+}
+
+.image-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.door-image {
+    width: 168px;
+    height:456px;
+    object-fit: contain;
+}
+
