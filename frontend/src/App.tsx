@@ -2,16 +2,29 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register/Register";
 import Login from "./pages/Login/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Homepage from "./pages/Homepage/Homepage"; // обычная домашняя страница
 
 function App() {
-  return (
-      <Router>
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
-  );
+    const isAuthenticated = Boolean(localStorage.getItem("token")); // пример авторизации
+
+    return (
+        <Router>
+            <Routes>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute isAuthenticated={isAuthenticated}>
+                            <Homepage />
+                        </ProtectedRoute>
+                    }
+                />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
