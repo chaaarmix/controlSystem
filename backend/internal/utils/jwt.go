@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"os"
 	"time"
 
@@ -9,18 +10,20 @@ import (
 
 var jwtSecret = []byte(getEnv("JWT_SECRET", "supersecret123"))
 
+// Структура claims
 type Claims struct {
 	UserID uint   `json:"user_id"`
 	Role   string `json:"role"`
 	jwt.RegisteredClaims
 }
 
+// Генерация токена
 func GenerateToken(userID uint, role string) (string, error) {
 	claims := &Claims{
 		UserID: userID,
 		Role:   role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(72 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
@@ -29,6 +32,7 @@ func GenerateToken(userID uint, role string) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
+// Парсинг токена
 func ParseToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
@@ -36,10 +40,13 @@ func ParseToken(tokenStr string) (*Claims, error) {
 	if err != nil {
 		return nil, err
 	}
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims, nil
+
+	claims, ok := token.Claims.(*Claims)
+	if !ok || !token.Valid {
+		return nil, errors.New("invalid token")
 	}
-	return nil, jwt.ErrTokenInvalidClaims
+
+	return claims, nil
 }
 
 func getEnv(key, fallback string) string {

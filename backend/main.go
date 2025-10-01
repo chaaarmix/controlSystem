@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"controlSystem/internal/handlers"
+	"controlSystem/internal/middleware"
 	"controlSystem/migrations"
-
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -36,7 +36,13 @@ func main() {
 	{
 		api.POST("/register", handlers.RegisterHandler(db))
 		api.POST("/login", handlers.LoginHandler(db))
-		// ... сюда можно повесить защищённые маршруты
+		// сюда можно добавить другие публичные маршруты
+	}
+
+	auth := r.Group("/api") // можно оставить "/api" для защищённых маршрутов
+	auth.Use(middleware.AuthMiddleware())
+	{
+		auth.GET("/me", handlers.MeHandler(db))
 	}
 
 	port := getEnv("PORT", "8080")
