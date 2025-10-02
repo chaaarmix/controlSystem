@@ -32,6 +32,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
             { key: "/", icon: <UserOutlined />, label: "Мой профиль" },
             { key: "/projects", icon: <ProjectOutlined />, label: "Проекты" },
             { key: "/tasks", icon: <ProfileOutlined />, label: "Задачи" },
+            { key: "/defects", icon: <ProfileOutlined />, label: "Дефекты" },
             { key: "/reports", icon: <FileTextOutlined />, label: "Отчёты" }
         );
     } else if (role === "customer") {
