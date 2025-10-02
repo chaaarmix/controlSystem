@@ -24,6 +24,7 @@ func main() {
 	migrations.MigrateAndSeed(db)
 
 	r := gin.Default()
+    	r.MaxMultipartMemory = 8 << 20
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{getEnv("FRONTEND_ORIGIN", "http://localhost:3000")},
@@ -33,15 +34,40 @@ func main() {
 	}))
 
 	api := r.Group("/api")
-	{
-		api.POST("/register", handlers.RegisterHandler(db))
-		api.POST("/login", handlers.LoginHandler(db))
-		// проекты
-        	api.GET("/projects", handlers.ListProjectsHandler(db))
-        	api.GET("/projects/:id", handlers.GetProjectHandler(db))
-        	api.POST("/projects", handlers.CreateProjectHandler(db))
-		// сюда можно добавить другие публичные маршруты
-	}
+    {
+    r.GET("/uploads/:filename", func(c *gin.Context) {
+        filename := c.Param("filename")
+        path := "./uploads/" + filename
+
+        // Проверяем, что файл существует
+        if _, err := os.Stat(path); os.IsNotExist(err) {
+            c.JSON(404, gin.H{"error": "File not found"})
+            return
+        }
+
+        // Отдаём файл с заголовком для скачивания
+        c.FileAttachment(path, filename)
+    })
+    	api.POST("/register", handlers.RegisterHandler(db))
+    	api.POST("/login", handlers.LoginHandler(db))
+        api.POST("/defects", handlers.CreateDefectHandler(db))
+
+    	// проекты
+    	api.GET("/projects", handlers.ListProjectsHandler(db))
+    	api.GET("/projects/:id", handlers.GetProjectByID(db))
+    	api.POST("/projects", handlers.CreateProjectHandler(db))
+
+    	// дефекты
+    	api.GET("/defects/for-manager", handlers.GetDefectsForManager(db))
+    	api.POST("/defects/assign", handlers.AssignAndConvertHandler(db))
+    	api.GET("/defects/:id/history", handlers.GetDefectHistory(db))
+    	api.GET("/my-tasks", handlers.GetMyTasks(db))
+// новый маршрут для загрузки файлов
+        api.POST("/defects/test-upload", handlers.TestFileUploadHandler(db))
+    	api.GET("/users", handlers.ListUsersHandler(db))
+
+    }
+
 
 	auth := r.Group("/api") // можно оставить "/api" для защищённых маршрутов
 	auth.Use(middleware.AuthMiddleware())
