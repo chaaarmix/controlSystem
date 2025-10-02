@@ -37,6 +37,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
     } else if (role === "customer") {
         menuItems.push(
             { key: "/", icon: <UserOutlined />, label: "Мой профиль" },
+            { key: "/projects", icon: <ProjectOutlined />, label: "Проекты" },
             { key: "/reports", icon: <FileTextOutlined />, label: "Отчёты" }
         );
     }

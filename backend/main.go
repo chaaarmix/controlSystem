@@ -36,6 +36,10 @@ func main() {
 	{
 		api.POST("/register", handlers.RegisterHandler(db))
 		api.POST("/login", handlers.LoginHandler(db))
+		// проекты
+        	api.GET("/projects", handlers.ListProjectsHandler(db))
+        	api.GET("/projects/:id", handlers.GetProjectHandler(db))
+        	api.POST("/projects", handlers.CreateProjectHandler(db))
 		// сюда можно добавить другие публичные маршруты
 	}
 
