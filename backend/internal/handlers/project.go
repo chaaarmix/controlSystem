@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"controlSystem/internal/models"
 	"github.com/gin-gonic/gin"
@@ -22,20 +21,19 @@ func ListProjectsHandler(db *gorm.DB) gin.HandlerFunc {
 }
 
 // GET /api/projects/:id
-func GetProjectHandler(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		idParam := c.Param("id")
-		id, _ := strconv.Atoi(idParam)
-
-		var project models.Project
-		if err := db.Preload("Manager").Preload("Customer").Preload("Tasks").
-			First(&project, id).Error; err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "проект не найден"})
-			return
-		}
-		c.JSON(http.StatusOK, project)
-	}
+// GET /api/projects/:id
+func GetProjectByID(db *gorm.DB) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        id := c.Param("id")
+        var project models.Project
+        if err := db.Preload("Manager").Preload("Customer").First(&project, id).Error; err != nil {
+            c.JSON(http.StatusNotFound, gin.H{"error": "project not found"})
+            return
+        }
+        c.JSON(http.StatusOK, project)
+    }
 }
+
 
 // POST /api/projects
 func CreateProjectHandler(db *gorm.DB) gin.HandlerFunc {

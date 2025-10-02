@@ -41,7 +41,12 @@ func MigrateAndSeed(db *gorm.DB) {
 			log.Fatal("create admin error:", err)
 		}
 	}
-    db.AutoMigrate(&models.User{}, &models.Project{}, &models.Task{})
+    db.AutoMigrate(&models.User{}, &models.Project{}, &models.Task{},
+                                                      		&models.Defect{},
+                                                      		&models.DefectFile{},
+                                                      		&models.DefectHistory{})
+
+
 }
 
 func seedRoleCode(db *gorm.DB, role models.Role, code string) {

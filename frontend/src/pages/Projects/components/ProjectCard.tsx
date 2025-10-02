@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Tag, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 interface User { id: number; full_name: string; role: string; }
 interface Task {
@@ -8,7 +9,6 @@ interface Task {
     status: string;
     project_id: number;
 }
-
 interface Project {
     id: number;
     name: string;
@@ -18,13 +18,18 @@ interface Project {
     active: boolean;
     tasks?: Task[];
 }
-
 interface Props {
     project: Project;
-    userRole: "engineer" | "manager" | "customer"; // текущая роль пользователя
+    userRole: "engineer" | "manager" | "customer";
 }
 
 const ProjectCard: React.FC<Props> = ({ project, userRole }) => {
+    const navigate = useNavigate();
+
+    const goToCreateDefect = () => {
+        navigate(`/create-defect?projectId=${project.id}`);
+    };
+
     return (
         <Card
             title={project.name}
@@ -36,12 +41,10 @@ const ProjectCard: React.FC<Props> = ({ project, userRole }) => {
             <p><b>Заказчик:</b> {project.customer.full_name}</p>
             <p><b>Задачи:</b> {project.active ? project.tasks?.length : 0}</p>
 
-            {/* Кнопка добавления дефекта только для инженера */}
-            {userRole === "engineer" && (
-                <Button type="primary">Добавить дефект</Button>
-            )}
-            {userRole === "manager" && (
-                <Button type="primary">Добавить дефект</Button>
+            {(userRole === "engineer" || userRole === "manager") && (
+                <Button type="primary" onClick={goToCreateDefect}>
+                    Добавить дефект
+                </Button>
             )}
         </Card>
     );
