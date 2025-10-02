@@ -26,12 +26,3 @@ type Project struct {
 	Tasks       []Task `gorm:"foreignKey:ProjectID" json:"tasks"`
 }
 
-type Task struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-
-	Name      string `gorm:"not null" json:"name"`
-	Status    string `gorm:"default:'new'" json:"status"` // можно расширить enum
-	ProjectID uint   `json:"project_id"`
-}
