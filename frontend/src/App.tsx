@@ -6,7 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Homepage from "./pages/Homepage/Homepage";
 import ProjectsPage from "./pages/Projects/ProjectsPage";
 import CreateDefect from "./components/CreateDefect";
-import Defects from "./pages/Defects/Defects"; // обычная домашняя страница
+import Defects from "./pages/Defects/Defects";
+import TasksPage from "./pages/Tasks/TasksPage"; // обычная домашняя страница
 
 function App() {
     const isAuthenticated = Boolean(localStorage.getItem("token")); // пример авторизации
@@ -49,7 +50,14 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-
+                <Route
+                    path="/tasks"
+                    element={
+                        <ProtectedRoute isAuthenticated={isAuthenticated}>
+                            <TasksPage />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </Router>
     );

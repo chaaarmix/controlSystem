@@ -31,9 +31,7 @@ interface Defect {
 }
 
 const statusColors: Record<string, string> = {
-    "Новая": "blue",
-    "В работе": "orange",
-    "Закрыта": "green",
+    "Новая": "blue"
 };
 
 const DefectsPage: React.FC = () => {
