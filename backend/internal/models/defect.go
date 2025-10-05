@@ -19,6 +19,7 @@ type Defect struct {
 	Status string `gorm:"default:'Новая'" json:"status"` // Новая → В работе → На проверке → Закрыта/Отменена
     Files       []DefectFile `gorm:"foreignKey:DefectID" json:"files"`
 	DueDate *time.Time `json:"due_date"`
+    History []DefectHistory `gorm:"foreignKey:DefectID" json:"history"`
 
 	IsConverted       bool  `gorm:"default:false" json:"is_converted"`
 	ConvertedToTaskID *uint `json:"converted_to_task_id"`
@@ -39,6 +40,7 @@ type DefectHistory struct {
 
 	DefectID   uint   `json:"defect_id"`
 	ActorID    uint   `json:"actor_id"`
+	Actor     User      `gorm:"foreignKey:ActorID" json:"actor"`
 	ActionType string `json:"action_type"`
 	ActionText string `json:"action_text"`
 }
