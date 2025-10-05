@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/gorm"
 )
+
 type Task struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time      `json:"created_at"`
@@ -20,7 +21,8 @@ type Task struct {
 	CreatorID uint `json:"creator_id"`
 	Creator   User `gorm:"foreignKey:CreatorID" json:"creator"`
 
-	AssigneeID *uint `json:"assignee_id"` // здесь только тип, без присвоения
+	AssigneeID *uint `json:"assignee_id"`
+	Assignee   *User `gorm:"foreignKey:AssigneeID" json:"assignee"` // добавлено
 
 	DueDate *time.Time `json:"due_date"`
 
