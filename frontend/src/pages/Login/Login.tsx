@@ -21,17 +21,14 @@ const Login: React.FC = () => {
                 email: values.email,
                 password: values.password,
             });
-            const loggedInUser = res.data.user; // добавляем эту переменную
-            // Сохраняем токен
-            // Сохраняем токен
+            const loggedInUser = res.data.user;
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("user_id", loggedInUser.id.toString());
-            // Сохраняем роль пользователя, которая приходит с сервера
             localStorage.setItem("role", loggedInUser.role);
             localStorage.setItem("user_full_name", loggedInUser.full_name);
 
             message.success("Вы успешно вошли!");
-            navigate("/"); // редирект на домашнюю страницу через useNavigate
+            navigate("/");
         } catch (err: any) {
             const text = err?.response?.data?.error || "Ошибка входа";
             message.error(text);
