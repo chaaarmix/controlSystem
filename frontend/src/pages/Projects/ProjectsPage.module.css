@@ -1,39 +1,30 @@
-
-/* Контент */
 .contentWrapper {
-    margin: 24px;
-    padding: 24px;
-    background: #f0f2f5;
-    min-height: 280px;
+    margin: 24px 16px 0;
+    overflow: initial;
 }
 
-/* Список проектов */
 .projectsList {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
 }
 
-/* Карточка проекта */
 .projectCard {
     width: 300px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Заголовок карточки */
 .projectCardTitle {
     font-size: 18px;
     font-weight: 600;
 }
 
-/* Описание */
 .projectCardDescription {
     font-size: 14px;
     color: #555;
 }
 
-/* Статус проекта */
 .projectCardStatus {
     margin-top: 8px;
     font-weight: 500;
