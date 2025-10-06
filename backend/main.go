@@ -37,67 +37,37 @@ func main() {
     r.GET("/uploads/:filename", func(c *gin.Context) {
         filename := c.Param("filename")
         path := "./uploads/" + filename
-
-        // Проверяем, что файл существует
         if _, err := os.Stat(path); os.IsNotExist(err) {
             c.JSON(404, gin.H{"error": "File not found"})
             return
         }
 
-        // Отдаём файл с заголовком для скачивания
         c.FileAttachment(path, filename)
     })
     	api.POST("/register", handlers.RegisterHandler(db))
     	api.POST("/login", handlers.LoginHandler(db))
         api.POST("/defects", handlers.CreateDefectHandler(db))
         api.GET("/tasks", handlers.GetAllTasks(db))
-api.PUT("/tasks/:id/status", handlers.UpdateTaskStatus(db))
-api.POST("/defects/comment", handlers.AddDefectCommentHandler(db))
-api.POST("/defects/comment-with-file", handlers.AddDefectCommentWithFileHandler(db))
-        // main.go или routes.go
-        /**api.PUT("/tasks/:id/status", func(c *gin.Context) {
-            taskID := c.Param("id")
-
-            var req struct {
-                Status string `json:"status"`
-            }
-            if err := c.ShouldBindJSON(&req); err != nil {
-                c.JSON(400, gin.H{"error": err.Error()})
-                return
-            }
-
-            var task models.Task
-            if err := db.First(&task, taskID).Error; err != nil {
-                c.JSON(404, gin.H{"error": "task not found"})
-                return
-            }
-
-            task.Status = req.Status
-            if err := db.Save(&task).Error; err != nil {
-                c.JSON(500, gin.H{"error": "failed to update task"})
-                return
-            }
-
-            c.JSON(200, task)
-        })*/
-    	// проекты
+        api.PUT("/tasks/:id/status", handlers.UpdateTaskStatus(db))
+        api.POST("/defects/comment", handlers.AddDefectCommentHandler(db))
+        api.POST("/defects/comment-with-file", handlers.AddDefectCommentWithFileHandler(db))
+        api.GET("/reports/tasks", handlers.GetTaskReports(db))
     	api.GET("/projects", handlers.ListProjectsHandler(db))
     	api.GET("/projects/:id", handlers.GetProjectByID(db))
     	api.POST("/projects", handlers.CreateProjectHandler(db))
-
-    	// дефекты
     	api.GET("/defects/for-manager", handlers.GetDefectsForManager(db))
     	api.POST("/defects/assign", handlers.AssignAndConvertHandler(db))
     	api.GET("/defects/:id/history", handlers.GetDefectHistory(db))
     	api.GET("/my-tasks", handlers.GetMyTasks(db))
-// новый маршрут для загрузки файлов
         api.POST("/defects/test-upload", handlers.TestFileUploadHandler(db))
     	api.GET("/users", handlers.ListUsersHandler(db))
+    	api.GET("/engineers-summary", handlers.EngineersSummaryHandler(db))
+
 
     }
 
 
-	auth := r.Group("/api") // можно оставить "/api" для защищённых маршрутов
+	auth := r.Group("/api")
 	auth.Use(middleware.AuthMiddleware())
 	{
 		auth.GET("/me", handlers.MeHandler(db))

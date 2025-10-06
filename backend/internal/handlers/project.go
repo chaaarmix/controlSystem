@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// GET /api/projects
 func ListProjectsHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var projects []models.Project
@@ -20,8 +19,6 @@ func ListProjectsHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// GET /api/projects/:id
-// GET /api/projects/:id
 func GetProjectByID(db *gorm.DB) gin.HandlerFunc {
     return func(c *gin.Context) {
         id := c.Param("id")
@@ -34,8 +31,6 @@ func GetProjectByID(db *gorm.DB) gin.HandlerFunc {
     }
 }
 
-
-// POST /api/projects
 func CreateProjectHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var input struct {

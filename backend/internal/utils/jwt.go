@@ -10,14 +10,12 @@ import (
 
 var jwtSecret = []byte(getEnv("JWT_SECRET", "supersecret123"))
 
-// Структура claims
 type Claims struct {
 	UserID uint   `json:"user_id"`
 	Role   string `json:"role"`
 	jwt.RegisteredClaims
 }
 
-// Генерация токена
 func GenerateToken(userID uint, role string) (string, error) {
 	claims := &Claims{
 		UserID: userID,
@@ -32,7 +30,6 @@ func GenerateToken(userID uint, role string) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
-// Парсинг токена
 func ParseToken(tokenStr string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil

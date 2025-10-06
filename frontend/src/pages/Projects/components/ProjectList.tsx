@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {Row, Col, Input, Select, Spin} from "antd";
 import ProjectCard from "./ProjectCard";
 import {useAuth} from "../../../context/AuthContext";
-
 const { Search } = Input;
 const { Option } = Select;
 
@@ -25,23 +24,18 @@ const ProjectsList: React.FC<Props> = ({ projects }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [activeFilter, setActiveFilter] = useState<"all" | "active" | "inactive">("all");
     const { currentUser } = useAuth();
-    // Если пользователь ещё не загружен, показываем загрузку
     if (!currentUser) {
         return <Spin tip="Загрузка пользователя..." />;
     }
 
-    // Фильтруем проекты по названию, активности и роли пользователя
     const filteredProjects = projects.filter(project => {
         const matchesName = project.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesActive =
             activeFilter === "all" ||
             (activeFilter === "active" && project.active) ||
             (activeFilter === "inactive" && !project.active);
-
-        // Проверка роли
         let matchesRole = true;
         if (currentUser.role === "customer") {
-            // Для customer показываем только проекты, где он manager или customer
             matchesRole =
                 project.manager.id === currentUser.id || project.customer.id === currentUser.id;
         }
@@ -52,7 +46,7 @@ const ProjectsList: React.FC<Props> = ({ projects }) => {
 
     return (
         <div>
-            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }} >
                 <Search
                     placeholder="Введите название проекта"
                     onChange={(e) => setSearchTerm(e.target.value)}

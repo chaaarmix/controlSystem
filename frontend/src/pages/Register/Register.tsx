@@ -125,7 +125,6 @@ export const Register: React.FC = () => {
                     </Form>
                 </Card>
             </Col>
-
         </Row>
     );
 };

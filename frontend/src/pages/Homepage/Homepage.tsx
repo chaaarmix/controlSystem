@@ -1,4 +1,3 @@
-// src/pages/Homepage/Homepage.tsx
 import React, { useEffect, useState } from "react";
 import { Layout, Card, Descriptions, Spin, message } from "antd";
 import styles from "./Homepage.module.css";
@@ -19,7 +18,6 @@ const Homepage: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Читаем роль из localStorage
     const role =
         (localStorage.getItem("role") as "engineer" | "manager" | "customer") ||
         "engineer";
@@ -33,7 +31,6 @@ const Homepage: React.FC = () => {
                     },
                 });
 
-                // Бэкенд возвращает объект user прямо
                 setUser(res.data);
             } catch (err: any) {
                 message.error("Не удалось загрузить данные профиля");
@@ -48,10 +45,8 @@ const Homepage: React.FC = () => {
     return (
         <Layout className={styles.layout}>
             <AppSidebar role={role} />
-
             <Layout>
                 <AppHeader />
-
                 <Content className={styles.contentWrapper}>
                     <div className={styles.content}>
                         {loading ? (

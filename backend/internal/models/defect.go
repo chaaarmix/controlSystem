@@ -16,7 +16,7 @@ type Defect struct {
 	InitiatorID uint `json:"initiator_id"`
 	Initiator   User `gorm:"foreignKey:InitiatorID" json:"initiator"`
 
-	Status string `gorm:"default:'Новая'" json:"status"` // Новая → В работе → На проверке → Закрыта/Отменена
+	Status string `gorm:"default:'Новая'" json:"status"`
     Files       []DefectFile `gorm:"foreignKey:DefectID" json:"files"`
 	DueDate *time.Time `json:"due_date"`
     History []DefectHistory `gorm:"foreignKey:DefectID" json:"history"`

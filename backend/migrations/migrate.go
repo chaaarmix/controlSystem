@@ -15,7 +15,6 @@ func MigrateAndSeed(db *gorm.DB) {
 		log.Fatal("automigrate error:", err)
 	}
 
-	// значения берем из переменных окружения, если не заданы — дефолты
 	managerCode := getEnv("CODE_MANAGER", "111111")
 	engineerCode := getEnv("CODE_ENGINEER", "222222")
 	adminEmail := getEnv("ADMIN_EMAIL", "admin@example.com")

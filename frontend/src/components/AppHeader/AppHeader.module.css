@@ -3,8 +3,8 @@
     padding: 0 24px;
     display: flex;
     align-items: center;
-    justify-content: center; /* центрируем по горизонтали все внутренние элементы */
-    position: relative; /* чтобы кнопка справа позиционировалась абсолютно */
+    justify-content: center;
+    position: relative;
     box-shadow: 0 2px 8px #f0f1f2;
 }
 
