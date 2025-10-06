@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// GET /api/users?role=engineer
 func ListUsersHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		role := c.Query("role")

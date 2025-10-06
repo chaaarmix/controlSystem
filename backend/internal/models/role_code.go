@@ -8,5 +8,5 @@ type RoleCode struct {
 	UpdatedAt time.Time
 
 	Role Role   `gorm:"type:varchar(20);uniqueIndex;not null"`
-	Code string `gorm:"type:varchar(10);uniqueIndex;not null"` // шестизначный код как строка
+	Code string `gorm:"type:varchar(10);uniqueIndex;not null"`
 }

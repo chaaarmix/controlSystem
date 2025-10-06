@@ -1,5 +1,5 @@
 .register-page {
-    min-height: 100vh;         /* на всю высоту экрана */
+    min-height: 100vh;
     display: flex;
     background: #ffffff;
 }

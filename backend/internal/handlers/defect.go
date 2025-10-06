@@ -29,15 +29,11 @@ func CreateDefectHandler(db *gorm.DB) gin.HandlerFunc {
             return
         }
 
-        // Возвращаем ID созданного дефекта
         c.JSON(http.StatusOK, defect)
     }
 }
 
 
-
-// GET /api/defects/for-manager
-// GET /api/defects/for-manager
 func GetDefectsForManager(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var defects []models.Defect
@@ -58,9 +54,6 @@ type AssignRequest struct {
 	ActorID    uint   `json:"actor_id" binding:"required"`
 }
 
-
-// POST /api/defects/assign
-// POST /api/defects/assign
 func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req AssignRequest
@@ -71,19 +64,16 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 
 		assigneeID := req.AssigneeID
 
-		// Находим дефект
 		var defect models.Defect
 		if err := db.First(&defect, req.DefectID).Error; err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "defect not found"})
 			return
 		}
 
-		// Парсим дату выполнения
 		var due *time.Time
 		if req.DueDate != "" {
 			t, err := time.Parse(time.RFC3339, req.DueDate)
 			if err != nil {
-				// Попробуем альтернативный формат без временной зоны
 				t2, err2 := time.ParseInLocation("2006-01-02T15:04:05", req.DueDate, time.Local)
 				if err2 != nil {
 					c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid due_date format"})
@@ -94,7 +84,6 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 			due = &t
 		}
 
-		// Создаем задачу
 		task := models.Task{
 			Name:            defect.Title,
 			Description:     defect.Description,
@@ -103,7 +92,7 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 			AssigneeID:      &assigneeID,
 			DueDate:         due,
 			RelatedDefectID: &defect.ID,
-			Status:          "Open",
+			Status:          "Новая",
 		}
 
 		if err := db.Create(&task).Error; err != nil {
@@ -111,7 +100,6 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Обновляем дефект
 		defect.IsConverted = true
 		defect.ConvertedToTaskID = &task.ID
 		defect.Status = "В работе"
@@ -120,7 +108,6 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Создаем запись в истории
 		var actorName string
 		var actor models.User
 		if err := db.First(&actor, req.ActorID).Error; err == nil {
@@ -140,12 +127,10 @@ func AssignAndConvertHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-
-// GET /api/defects/:id/history
 func GetDefectHistory(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defectID := c.Param("id")
-		db.Preload("History.Actor") // Actor подгружается для каждой записи истории
+		db.Preload("History.Actor")
 		var history []models.DefectHistory
 		if err := db.Where("defect_id = ?", defectID).Order("created_at asc").Find(&history).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "db error"})
@@ -180,22 +165,16 @@ func GetMyTasks(db *gorm.DB) gin.HandlerFunc {
 }
 
 
-
-
-// POST /api/defects/test-upload
 func TestFileUploadHandler(db *gorm.DB) gin.HandlerFunc {
     return func(c *gin.Context) {
-        // Проверка и создание папки uploads
         if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
             os.MkdirAll("./uploads", os.ModePerm)
         }
 
-        // Принимаем дефект ID из формы
         defectIDStr := c.PostForm("defect_id")
         var defectID uint
         fmt.Sscan(defectIDStr, &defectID)
 
-        // Читаем файл
         file, err := c.FormFile("file")
         if err != nil {
             c.JSON(http.StatusBadRequest, gin.H{"error": "Файл не передан"})
@@ -208,7 +187,6 @@ func TestFileUploadHandler(db *gorm.DB) gin.HandlerFunc {
             return
         }
 
-        // Создаём запись в БД
         defFile := models.DefectFile{
             DefectID: defectID,
             FileName: file.Filename,
@@ -254,7 +232,6 @@ func UpdateTaskStatus(db *gorm.DB) gin.HandlerFunc {
 			return
 		}
 
-		// Создание записи в истории дефекта
 		if task.RelatedDefectID != nil {
 			history := models.DefectHistory{
 				DefectID:   *task.RelatedDefectID,
@@ -270,7 +247,6 @@ func UpdateTaskStatus(db *gorm.DB) gin.HandlerFunc {
 			}
 		}
 
-		// Подгружаем свежую историю, чтобы вернуть клиенту
 		if task.RelatedDefectID != nil {
 			if err := db.Preload("History.Actor").First(&task.RelatedDefect, *task.RelatedDefectID).Error; err != nil {
 				log.Println("Failed to preload defect history:", err)
@@ -281,8 +257,6 @@ func UpdateTaskStatus(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-
-// GET /api/tasks
 func GetAllTasks(db *gorm.DB) gin.HandlerFunc {
     return func(c *gin.Context) {
         var tasks []models.Task
@@ -344,7 +318,6 @@ func AddDefectCommentWithFileHandler(db *gorm.DB) gin.HandlerFunc {
         fmt.Sscan(defectIDStr, &defectID)
         fmt.Sscan(actorIDStr, &actorID)
 
-        // Сохраняем комментарий в истории
         history := models.DefectHistory{
             DefectID:   defectID,
             ActorID:    actorID,

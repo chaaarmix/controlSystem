@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Select, DatePicker, message, Tag, Typography, List } from "antd";
+import {Card, Button, Select, DatePicker, message, Tag, Typography, List, Layout} from "antd";
 import dayjs from "dayjs";
 import AppHeader from "../../components/AppHeader/AppHeader";
 import AppSidebar from "../../components/AppSidebar/AppSidebar";
 import { api } from "../../api/api";
+import styles from "../../main.module.css";
+import {Content} from "antd/es/layout/layout";
 
 const { Option } = Select;
 const { Text, Link, Paragraph } = Typography;
@@ -17,7 +19,7 @@ interface User {
 interface DefectFile {
     id: number;
     file_name: string;
-    file_path: string; // имя файла, путь формируется на фронте
+    file_path: string;
 }
 
 interface Defect {
@@ -75,11 +77,12 @@ const DefectsPage: React.FC = () => {
     };
 
     return (
-        <div style={{ display: "flex", minHeight: "100vh" }}>
+        <Layout className={styles.layout} style={{ display: "flex", minHeight: "100vh" }}>
             <AppSidebar role="manager" />
             <div style={{ flex: 1 }}>
                 <AppHeader />
-                <div style={{ padding: 24 }}>
+                <Content style={{ padding: 24 }}  className={styles.contentWrapper}>
+                    <div className={styles.content}>
                     <Typography.Title level={2}>Дефекты</Typography.Title>
                     <List
                         dataSource={defects}
@@ -153,9 +156,10 @@ const DefectsPage: React.FC = () => {
                             </List.Item>
                         )}
                     />
-                </div>
+                    </div>
+                </Content>
             </div>
-        </div>
+        </Layout>
     );
 };
 

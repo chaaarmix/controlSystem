@@ -15,14 +15,14 @@ type Task struct {
 	Name        string `gorm:"not null" json:"name"`
 	Description string `gorm:"type:text" json:"description"`
 
-	Status    string `gorm:"default:'Open'" json:"status"` // Open/InProgress/Done/Cancelled
+	Status    string `gorm:"default:'Новая'" json:"status"`
 	ProjectID uint   `json:"project_id"`
 
 	CreatorID uint `json:"creator_id"`
 	Creator   User `gorm:"foreignKey:CreatorID" json:"creator"`
 
 	AssigneeID *uint `json:"assignee_id"`
-	Assignee   *User `gorm:"foreignKey:AssigneeID" json:"assignee"` // добавлено
+	Assignee   *User `gorm:"foreignKey:AssigneeID" json:"assignee"`
 
 	DueDate *time.Time `json:"due_date"`
 

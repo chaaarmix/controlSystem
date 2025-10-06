@@ -11,7 +11,7 @@ const (
 	RoleAdmin    Role = "admin"
 	RoleManager  Role = "manager"
 	RoleEngineer Role = "engineer"
-	RoleCustomer Role = "customer" // руководитель/заказчик
+	RoleCustomer Role = "customer"
 )
 
 type User struct {
@@ -21,6 +21,6 @@ type User struct {
 
 	FullName string `gorm:"not null" json:"full_name"`
 	Email    string `gorm:"uniqueIndex;not null" json:"email"`
-	Password string `gorm:"not null" json:"-"` // hashed
+	Password string `gorm:"not null" json:"-"`
 	Role     Role      `gorm:"type:varchar(20);not null" json:"role"`
 }

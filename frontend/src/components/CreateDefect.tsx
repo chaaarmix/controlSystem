@@ -16,7 +16,6 @@ const CreateDefect: React.FC = () => {
     const location = useLocation();
     const { currentUser } = useAuth();
 
-    // Получаем projectId из query (?projectId=3)
     const params = new URLSearchParams(location.search);
     const projectId = params.get("projectId");
 
@@ -35,7 +34,6 @@ const CreateDefect: React.FC = () => {
         }
 
         try {
-            // 1️⃣ Создаём дефект без файлов
             const formData = new FormData();
             formData.append("title", values.title);
             formData.append("description", values.description || "");
@@ -56,7 +54,6 @@ const CreateDefect: React.FC = () => {
                 return;
             }
 
-            // 2️⃣ Загружаем файлы отдельно
             for (const file of fileList) {
                 const fileObj = file instanceof File ? file : file.originFileObj;
                 if (!fileObj) {
@@ -114,8 +111,8 @@ const CreateDefect: React.FC = () => {
                                 multiple
                                 fileList={fileList}
                                 beforeUpload={(file) => {
-                                    setFileList(prev => [...prev, file]); // сохраняем настоящий File
-                                    return false; // запрещаем автоматическую загрузку
+                                    setFileList(prev => [...prev, file]);
+                                    return false;
                                 }}
                                 onRemove={(file) => {
                                     setFileList(prev => prev.filter(f => f !== file));

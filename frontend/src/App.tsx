@@ -7,7 +7,10 @@ import Homepage from "./pages/Homepage/Homepage";
 import ProjectsPage from "./pages/Projects/ProjectsPage";
 import CreateDefect from "./components/CreateDefect";
 import Defects from "./pages/Defects/Defects";
-import TasksPage from "./pages/Tasks/TasksPage"; // обычная домашняя страница
+import TasksPage from "./pages/Tasks/TasksPage";
+import ReportsPage from "./pages/ReportsPage/ReportsPage";
+import EngineerRatingPage from "./pages/EngineerRatingPage/EngineerRatingPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage"; // обычная домашняя страница
 
 function App() {
     const isAuthenticated = Boolean(localStorage.getItem("token")); // пример авторизации
@@ -58,6 +61,23 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/reports"
+                    element={
+                        <ProtectedRoute isAuthenticated={isAuthenticated}>
+                            <ReportsPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/rating"
+                    element={
+                        <ProtectedRoute isAuthenticated={isAuthenticated}>
+                            <EngineerRatingPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
     );

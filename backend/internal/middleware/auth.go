@@ -32,7 +32,6 @@ func AuthMiddleware() gin.HandlerFunc {
             return
         }
 
-        // сохраняем userID в контекст
         c.Set("userID", claims.UserID)
 
         c.Next()

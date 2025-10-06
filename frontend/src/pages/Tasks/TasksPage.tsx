@@ -1,11 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Card, Tag, Typography, List, message, Select, Collapse, Space, Input, Button, Row, Col, Divider } from "antd";
+import {
+    Card,
+    Tag,
+    Typography,
+    List,
+    message,
+    Select,
+    Collapse,
+    Space,
+    Input,
+    Button,
+    Row,
+    Col,
+    Divider,
+    Layout, Upload
+} from "antd";
 import dayjs from "dayjs";
 import AppHeader from "../../components/AppHeader/AppHeader";
 import AppSidebar from "../../components/AppSidebar/AppSidebar";
 import { api } from "../../api/api";
 import { UploadOutlined } from '@ant-design/icons';
-
+import {Content} from "antd/es/layout/layout";
+import styles from "../../main.module.css"
 const { Text, Paragraph } = Typography;
 const { Option } = Select;
 
@@ -52,37 +68,18 @@ const TasksPage: React.FC = () => {
         } catch { message.error("Не удалось обновить статус задачи"); }
     };
 
-    const handleAddComment = async (taskId: number, commentText: string) => {
-        if (!commentText.trim()) return;
-        try {
-            const defectId = tasks.find(t => t.id === taskId)?.related_defect?.id;
-            if (!defectId) return;
-            const res = await api.post("/defects/comment", { defect_id: defectId, actor_id: Number(userId), comment: commentText });
-            const newHistoryItem = res.data;
-            setTasks(prevTasks => prevTasks.map(task => {
-                if (task.id === taskId && task.related_defect) {
-                    return {
-                        ...task,
-                        related_defect: { ...task.related_defect, history: [...(task.related_defect.history || []), newHistoryItem] },
-                        newComment: ""
-                    };
-                }
-                return task;
-            }));
-        } catch { message.error("Не удалось добавить комментарий"); }
-    };
-
     const filteredTasks = tasks
         .filter(t => !searchTerm || t.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .filter(t => !filterStatus || t.status === filterStatus)
         .sort((a, b) => (a.status === "Закрыта" && b.status !== "Закрыта") ? 1 : (b.status === "Закрыта" && a.status !== "Закрыта") ? -1 : 0);
 
     return (
-        <div style={{ display: "flex", minHeight: "100vh" }}>
+        <Layout style={{ display: "flex", minHeight: "100vh" }} className={styles.layout}>
             <AppSidebar role={userRole} />
             <div style={{ flex: 1 }}>
                 <AppHeader />
-                <div style={{ padding: 24 }}>
+                <Content style={{ padding: 24 }} className={styles.contentWrapper}>
+                    <div className={styles.content}>
                     <Typography.Title level={2}>{userRole === "manager" ? "Все задачи" : "Мои задачи"}</Typography.Title>
 
                     <Row gutter={[16, 16]} style={{ marginBottom: 24,justifyContent:"space-between" }}>
@@ -115,7 +112,6 @@ const TasksPage: React.FC = () => {
                                     }}
                                 >
                                     <Row gutter={[16, 16]} >
-                                        {/* Левый столбик: дефект */}
                                         <Col xs={24} md={12}>
                                             {task.related_defect ? (
                                                 <Card type="inner" title={`Дефект: ${task.related_defect.title || "-"}`} size="small">
@@ -139,7 +135,6 @@ const TasksPage: React.FC = () => {
                                             ) : <Text type="secondary">Нет связанного дефекта</Text>}
                                         </Col>
 
-                                        {/* Правый столбик: описание задачи и статус */}
                                         <Col xs={24} md={12} >
                                             <Paragraph>
                                                 <Text strong>Изменить статус:</Text>
@@ -154,7 +149,6 @@ const TasksPage: React.FC = () => {
                                         </Col>
                                     </Row>
 
-                                    {/* История и комментарии */}
                                     {task.related_defect?.history && (
                                         <>
                                             <Divider />
@@ -177,9 +171,17 @@ const TasksPage: React.FC = () => {
 
                                                     <Space direction="vertical" style={{ width: "100%", marginTop: 16 }}>
                                                         <Input.TextArea rows={3} placeholder="Добавить комментарий..." value={task.newComment || ""} onChange={e => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, newComment: e.target.value } : t))} />
-                                                        <label htmlFor={`file-upload-${task.id}`}>
-                                                            <Button icon={<UploadOutlined />} style={{ width: "100%" }}>{task.newFile ? task.newFile.name : "Выбрать файл"}</Button>
-                                                        </label>
+                                                        <Upload
+                                                            beforeUpload={file => {
+                                                                setTasks(prev => prev.map(t => t.id === task.id ? { ...t, newFile: file } : t));
+                                                                return false;
+                                                            }}
+                                                            showUploadList={false}
+                                                        >
+                                                            <Button icon={<UploadOutlined />} style={{ width: "100%" }}>
+                                                                {task.newFile ? task.newFile.name : "Выбрать файл"}
+                                                            </Button>
+                                                        </Upload>
                                                         <input id={`file-upload-${task.id}`} type="file" style={{ display: "none" }} onChange={e => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, newFile: e.target.files?.[0] } : t))} />
                                                         <Button type="primary" onClick={async () => {
                                                             const taskToUpdate = tasks.find(t => t.id === task.id);
@@ -218,9 +220,10 @@ const TasksPage: React.FC = () => {
                             </List.Item>
                         )}
                     />
-                </div>
+                    </div>
+                </Content>
             </div>
-        </div>
+        </Layout>
     );
 };
 

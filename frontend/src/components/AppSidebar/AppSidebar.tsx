@@ -5,6 +5,7 @@ import {
     ProfileOutlined,
     UserOutlined,
     FileTextOutlined,
+    BarChartOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./AppSidebar.module.css";
@@ -42,6 +43,12 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ role }) => {
             { key: "/reports", icon: <FileTextOutlined />, label: "Отчёты" }
         );
     }
+
+    menuItems.push({
+        key: "/rating",
+        icon: <BarChartOutlined />,
+        label: "Рейтинг",
+    });
 
     return (
         <Sider width={200} className={styles.sider}>
